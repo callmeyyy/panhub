@@ -33,6 +33,20 @@ export const WX_AUTH_SDK_URLS: readonly string[] = [
 /** 主源（旧配置名保留：app 内动态补插兜底仍先试主源） */
 export const WX_AUTH_SDK_URL = WX_AUTH_SDK_URLS[0];
 
+/**
+ * 是否启用微信登录
+ *
+ * false（当前）：页面不出现任何登录入口与弹窗——顶部导航（含头像登录）不渲染、
+ * 服务端返回 401 时不再吊起登录框，「获取」直接给友好提示。
+ *
+ * 注意：搜索本身对访客开放，本来就不要求登录；wx-auth SDK **仍会加载**，
+ * 因为它同时负责签发搜索/转存/探活所需的匿名票据（?at=），关掉它请求会被
+ * 服务端拒绝。SDK 只做静默初始化（silent），无任何 UI，用户无感。
+ *
+ * 想恢复登录：把这个值改回 true 即可（顶部导航与登录弹窗会一起回来）。
+ */
+export const AUTH_ENABLED = false;
+
 export const SITE_NAME = "PanHub";
 
 /** 每轮搜索的累计结果上限（与后端默认一致：达到后出现「继续」） */

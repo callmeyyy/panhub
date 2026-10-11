@@ -11,8 +11,11 @@
       顶部导航：外部 Web Component（站点导航 + 头像登录）。
       登录态与本页共用同一个 wx-auth 单例，登录成功会同步到 isVerified，
       因此搜索前的认证校验不会重复弹窗。
+
+      AUTH_ENABLED = false 时不渲染 —— 页面不出现任何登录入口。
+      把 config.AUTH_ENABLED 改回 true 即可恢复。
     -->
-    <site-navbar></site-navbar>
+    <site-navbar v-if="AUTH_ENABLED"></site-navbar>
 
     <!-- 公告条 -->
     <div v-if="announcementVisible" class="announce-bar" role="status">
@@ -222,7 +225,7 @@ import { useTransfer } from "./composables/useTransfer";
 import HotKeywordSection from "./components/HotKeywordSection.vue";
 import CuratedResourceSection from "./components/CuratedResourceSection.vue";
 import NoticeModal from "./components/NoticeModal.vue";
-import { API_BASE } from "./config";
+import { API_BASE, AUTH_ENABLED } from "./config";
 import { useSearch } from "./composables/useSearch";
 import { useAnnouncement } from "./composables/useAnnouncement";
 import { useToast } from "./composables/useToast";

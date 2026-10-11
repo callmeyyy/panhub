@@ -14,7 +14,7 @@
  * 登录流程与主站完全一致：关注公众号 + 验证码（或小程序扫码），强制不可跳过。
  */
 import { ref, watch } from "vue";
-import { WX_AUTH_API_BASE, WX_AUTH_SDK_URLS } from "../config";
+import { AUTH_ENABLED, WX_AUTH_API_BASE, WX_AUTH_SDK_URLS } from "../config";
 
 export interface WxAuthUser {
   openid?: string;
@@ -226,6 +226,11 @@ function waitForVerified(timeoutMs = 5 * 60_000): Promise<void> {
 
 /** 弹出登录窗并等待用户完成验证 */
 async function promptLogin(): Promise<boolean> {
+  // 登录已关闭（config.AUTH_ENABLED = false）：所有入口统一不弹窗，
+  // 按「未登录」返回 false，由调用方决定提示文案。
+  // 注意：initAuth() 不受此开关影响——SDK 仍要初始化以签发匿名票据。
+  if (!AUTH_ENABLED) return false;
+
   const WxAuth = await resolveWxAuth().catch((err) => {
     console.error("[auth] SDK 不可用，无法弹出登录窗", err);
     return null;

@@ -19,6 +19,7 @@
 import { computed, ref } from "vue";
 import { ApiError, apiPost } from "../api/client";
 import { getAnonTicketSafe } from "../api/auth";
+import { AUTH_ENABLED } from "../config";
 import { buildShareText, driverOf } from "../utils/shareText";
 
 export type TransferStatus = "idle" | "loading" | "done" | "dead";
@@ -241,7 +242,12 @@ export function useTransfer(onAuthRequired?: () => Promise<boolean> | boolean) {
             if (!ok) {
               // 登录中断/失败：恢复弹窗给提示
               openTransferDialog(key);
-              failTransferDialog("登录成功后请再点一次「获取」", "error");
+              failTransferDialog(
+                AUTH_ENABLED
+                  ? "登录成功后请再点一次「获取」"
+                  : "本站点未开启登录，「获取」暂不可用",
+                "error"
+              );
               return;
             }
             // 登录成功：恢复「正在获取」并自动重试（仅一次，防死循环）
